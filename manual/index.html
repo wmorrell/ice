@@ -1,0 +1,139 @@
+<html>
+
+<head>
+    <title>ICE User Manual</title>
+    <link rel="stylesheet" href="../bootstrap-3.1.1/css/bootstrap.min.css">
+    <style>
+        a.nolink {
+            text-decoration: none;
+            color: black;
+        }
+        ol.contents {
+            counter-reset: item;
+        }
+        ol.contents li {
+            display: block;
+            position: relative;
+        }
+        ol.contents li:before {
+            content: counters(item, ".")".";
+            counter-increment: item;
+            position: absolute;
+            margin-right: 100%;
+            right: 10px; /* space between number and text */
+        }
+        
+        .sub-section {
+            padding-top: 18px;
+            padding-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="../index.html">Main</a></li>
+            <li class="active">User Manual</li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h2>ICE User Manual</h2>
+            </div>
+            <p>This user manual describes how to use ICE through it's web interface. The application makes the same
+                functionality available via the <a href="../api/index.html">REST API</a>.</p>
+            
+            <br>
+            <h4>Table of Contents</h4>
+            <ol class="contents"> 
+                <li><a href="#intro">Introduction</a></li>                
+                <li><a href="#login">Login</a></li>
+
+                <li><a href="#1">Adding Entries</a>
+                    <ol class="contents"> 
+                        <li><a href="#create.entry.single">Creating single entries</a></li>
+                        <li><a href="#create.entry.bulk">Uploading multiple entries</a></li>
+                    </ol>
+                </li>
+                <li><a href="#manage.entry">Managing Entries</a>
+                    <ol class="contents"> 
+                        
+                    </ol>
+                </li>
+                <li><a href="#search">Searching</a>
+                    <ol class="contents"> 
+                        <li><a href="#search.keyword">Keyword Search</a></li>
+                        <li><a href="#search.advanced">Advanced Search</a></li>
+                    </ol>
+                </li>
+                
+                <li><a href="#wor">Web of Registries</a>
+                    <ol class="contents"> 
+                        <li><a href="#wor.1">Thing 1</a></li>
+                        <li><a href="#wor.2">Thing 2</a></li>
+                    </ol>
+                </li>
+            </ol>
+            
+            <div class="page-header">
+                <h3><a id="intro" class="nolink">Introduction</a></h3>
+            </div>
+            <p>The <a href="http://www.jbei.org">Joint BioEnergy Institute</a>'s Inventory of Composable Elements (ICE) is an
+                <a href="https://github.com/JBEI/ice">open source</a> registry software and platform for managing
+                information about synthetic biological parts. It provides support for microbial strains, plasmids, <i>Arabidopsis</i> seeds and generic parts. Within the ICE system these are generally referred to as <i>Entries</i>.</p>
+            
+            <div class="page-header">
+                <h3><a id="login" class="nolink">Login</a></h3>
+            </div>
+            <p>
+                To log into ICE, enter your username and password. If you have forgotten your password, click on the "Forgot your password?" link, enter your username and click Reset your password. This will reset your password and a temporary password will be emailed to you. 
+                <div class="alert alert-info" role="alert">Usernames are typically your email address.</div>
+            
+                You may create a user account by clicking on "Create Account" and providing the information requested. A temporary password will be generated and emailed to you on successful account creation.
+            <div class="alert alert-info" role="alert">If the "Create Account" button is not available then it implies that the registry instance does not permit user registrations and might be integrated with another user directory system. In that case contact the administrator of the site.</div>
+            </p>
+
+            <div class="page-header">
+                <h3>Adding Entries</h3>
+            </div>
+        <p>You will be able to add entries to ICE once you are <a href="#login">logged in</a>. There are two ways to add entries in ICE:
+            <ul>
+                <li>Using the <a href="#create.entry.single">single entry form</a></li>
+                <li>Using the bulk upload interface to <a href="#create.entry.bulk">upload multiple entries</a> at the same time</li>
+            </ul>
+
+            <div class="sub-section">
+                <h4><strong><a class="nolink" id="create.entry.single">Creating single entries</a></strong></h4>
+            </div>
+
+            <p>Click on create entry and select the type of entry to add. Fill out the information and upload the sequence
+            information and click submit. The form is validated to ensure that the required information is entered
+                before the record is created.</p>
+
+            <div class="sub-section ">
+                <h4><strong><a class="nolink" id="create.entry.bulk">Uploading multiple entries</a></strong></h4>
+
+            Click on create entry and select the type of entry to add. Fill out the information and upload the sequence
+            information and click submit. The form is validated to ensure that the required information is entered
+            before the record is created.
+            </div>
+        </p>
+        </div>
+    
+        <div class="page-header">
+            <h3><a id="search" class="nolink">Searching</a></h3>
+        </div>
+        <p>There are two main ways to search for parts in the registry; using quick search or the advanced search for</p>
+    
+        <div class="page-header">
+            <h3><a id="wor" class="nolink">Web of Registries</a></h3>
+        </div>
+        <p>This functionality enables </p>
+    </div>
+</div>
+</body>
+
+</html>

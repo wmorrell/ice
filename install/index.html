@@ -1,0 +1,180 @@
+<html>
+    <title>Quick Install Guide</title>
+    <head>
+        <link rel="stylesheet" href="../bootstrap-3.1.1/css/bootstrap.min.css">
+    </head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <ol class="breadcrumb">
+          <li><a href="../index.html">Main</a></li>
+          <li class="active">Install Guide</li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h2>ICE Quick Start Guide</h2>
+            </div>
+            This guide is intended to help you quickly set up an ICE installation for evaluation, private use or server
+            installation.
+            A more detailed manual is being worked on. Direct any questions to the <a href="https://groups.google.com/forum/#!forum/gd-ice">ICE Google Groups page</a>. The project page
+            can be <a href="https://github.com/JBEI/ice">found on github.</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h3>Installation Requirements</h3>
+            </div>
+            Running ICE as a web application requires deployment in a J2EE servlet container such as Apache Tomcat and
+            depends on JRE (or JDK) 7.
+            <br><br>
+            To use BLAST to search sequences, <a href="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/">obtain
+            the latest BLAST+ executables.</a> You can either install it on your system or extract it to a folder.
+            <br><br>
+            ICE is configured by default to use <a href="http://hsqldb.org/">HSQLDB</a> for data storage.
+            In a production environment, it is highly recommended that a standalone database be used.
+            <a href="http://hibernate.org/orm/">Hibernate</a> is used
+            for Object/Relational mapping and therefore ICE can be configured and used with any of the Hibernate
+            supported databases.
+            <a href="http://www.postgresql.org/">PostgreSQL</a> has been tested more extensively with ICE.
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h3>Installing from the WAR file</h3>
+            </div>
+            A pre-compiled WAR file is made available from our <a href="http://registry-test.jbei.org:8111/">continuous
+            build system</a>.
+            Click "Log in as guest" and then select "Artifacts" under the Master branch to download the latest
+            production ready version. The Dev
+            branch may contain newer features in a beta state.
+            <br><br>
+            <ul>
+                <li>Extract the contents of the WAR file using any unzip utility.</li>
+                <li>Change the hibernate database connections in <kbd>$ICE_HOME/WEB-INF/classes/hibernate.cfg.xml</kbd>
+                    (where $ICE_HOME is the directory where the WAR file was extracted). The following is an example
+                    configuration for a PostgreSQL database running on the local machine:<br><br>
+<pre>    &lt;property name="hibernate.connection.url"&gt;jdbc:postgresql://localhost/regdb&lt;/property&gt;
+    &lt;property name="hibernate.connection.driver_class"&gt;org.postgresql.Driver&lt;/property&gt;
+    &lt;property name="hibernate.connection.username"&gt;userName&lt;/property&gt;
+    &lt;roperty name="hibernate.connection.password"&gt;Pa55WorD&lt;/property&gt;
+    &lt;property name="hibernate.dialect"&gt;org.hibernate.dialect.PostgreSQL9Dialect&lt;/property&gt;
+</pre>
+                    Also change the value of the property which indicates the location of the search index<br><br>
+                    <pre>&lt;property name="hibernate.search.default.indexBase"&gt;data/index&lt;/property&gt;</pre>
+                </li>
+                <li>ICE uses logback for logging. The default location of the log file is <kbd>/tmp/gd-ice.log</kbd>.
+                    You can change this in <kbd>$ICE_HOME/WEB-INF/classes/logback.xml</kbd></li>
+                <li>You may change the logo (which appears on the login page and the page headers) by replacing <kbd>$ICE_HOME/static/images/logo.png</kbd>
+                    with your custom logo.
+                </li>
+                <li>You may change the application page title by opening <kbd>$ICE_HOME/Gwt_ice.html</kbd> in any text
+                    editor and replacing "JBEI Registry".
+                </li>
+            </ul>
+
+            Start up the application container and use your web browser to access ICE. There are some settings stored in
+            the database that also need to be configured. The default administrator username and password is <kbd>Administrator</kbd>
+            (for both). Be sure to change the password. The rest of the system settings are on the Admin section of the
+            application. Please go through all the settings and make sure the values are correct. They can be changed at
+            any time while the application is running.
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h3>Running a test server</h3>
+            </div>
+            ICE includes a jetty webserver, which can be used test out your compiled package without deploying it to
+            tomcat. The jetty settings are defined in <kbd>$ICE_HOME/jetty-debug.xml</kbd>. You will need to generate
+            a self-signed certificate as ICE uses HTTPS by default.
+            To generate a self-signed certificate run:
+
+            <pre>keytool -genkey -alias tomcat -keyalg RSA -keystore ./.keystore</pre>
+
+            Follow the prompts and enter the requested information. When prompted for a password, you may use
+            <kbd>changeit</kbd>. If you opt for a different password, make sure to enter that is jetty-debug.xml.
+            Copy the generated .keystore file to $ICE_HOME and start jetty by running:
+
+            <pre>mvn jetty:run -Dmaven.test.skip=true</pre>
+
+            Point your browser to https://localhost:8443 to access the application.
+            <br>
+            To run a tomcat server, you may also use the generated keystore file. Update
+            <kbd>$TOMCAT_HOME/conf/server.xml</kbd> to redirect port 8080 to port 8443 using the following Connector directive:
+
+            <pre>&lt;Connector executor="tomcatThreadPool"
+                            port="8080" protocol="HTTP/1.1"
+                            connectionTimeout="20000"
+                            redirectPort="8443" /&gt;
+                &lt;Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
+                           maxThreads="150" scheme="https" secure="true" keystoreFile="./.keystore"
+                           keystorePass="changeit" clientAuth="false" sslProtocol="TLS" /&gt;</pre>
+            In a production environment you will need to purchase an SSL certificate, since self-generated certificates
+            result in browser warnings.
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h3>Upgrading from older versions</h3>
+            </div>
+            At this time, only upgrading from version 3.* to any of 3.* versions is supported.
+            It is recommended that you perform a full database backup before attempting an upgrade.
+            There are some changes to the database schemas so ensure that the 'hbm2ddl.auto' property is set to 'update'
+            when first starting up the server after updating the webapp.
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h3>Administration</h3>
+            </div>
+            There are a few basic functions available from the the Administrator's page located at
+            https://yoursite/#page=admin.
+            Any user with administrative privileges will see an admin link in the main menu. The admin section currently
+            includes:
+
+            <ul>
+                <li><b>System settings</b>: used for general site settings, email settings, and blast search settings.
+                </li><li><b>Web of registries settings</b>: allows you to include your site in the web of registries and
+                    partner
+                    with other ICE installations to access data that is made publicly available. We encourage all
+                    institutions to enable this feature.
+                    <div class="alert alert-info"><b>NOTE</b>: Joining web of registries does not make your data visible
+                        to
+                        other institutions. Each record/entry in ICE has to be explicitly made public, before it is
+                        available.
+                    </div>
+                </li>
+                <li><b>Manage User settings</b>: shows list of site members and basic information about them and allows
+                    user account creation.
+                </li>
+                <li><b>Manage Groups</b>: permits public group creation and management.
+            </li></ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-header">
+                <h3>Contributing</h3>
+            </div>
+            ICE is <a href="https://github.com/JBEI/ice">open source software</a>, and we gladly accept patches to our
+            code. Just send us an email and/or a patch file.
+            We also encourage bug filings and feature requests.
+        </div>
+    </div>
+</div>
+
+
+</body></html>
