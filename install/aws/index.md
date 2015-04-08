@@ -12,32 +12,18 @@ The process takes about an hour to complete. You'll need
 We've included a dummy SSL certificate that you can use while testing out the intallation process. Note that using the dummy certificate will allow anyone in the world to view all your ICE repository data, in which case you might as well use the [public ICE registry](https://public-registry.jbei.org/login).
 
 ## Start the application
-1. Log into your AWS account and go to the [Elastic Beanstalk site](https://console.aws.amazon.com/elasticbeanstalk/home). It is in the `Services` menu at the top of the page. ![](01.png "Elastic Beanstalk link")
 
-1. Click `Create New Application` ![](001.png "Create New Application link")
+1. Start a new ICE application by clicking [this link](https://console.aws.amazon.com/elasticbeanstalk/?region=us-east-1#/newApplication?applicationName=jbei-ice&solutionStackName=Tomcat&sourceBundleUrl=https://s3.amazonaws.com/public-6612266/ice-4.1.13.war&environmentType=LoadBalancing&tierName=WebServer&instanceType=t1.micro&withVpc=false&withRds=true&rdsDBEngine=postgres&rdsDBAllocatedStorage=5&rdsDBInstanceClass=db.t1.micro&rdsMultiAZDatabase=true&rdsDBDeletionPolicy=Snapshot). This will create the application in Amazon's Eastern U.S. servers which are accessible worldwide. If you need your ICE instance to run in a particular geographic location, please let us know here [here](https://github.com/JBEI/ice/issues).
 
-1. Select an `Application Name`, something like "jbei-registry". Click `Next`.
+1. Enter a unique name for your application&mdash;something like "[institution-name]-ice"&mdash;and then click "Review and Launch". ![](001.png "Enter Application Name")
 
-1. Click `Create web server` and click `Next` on the Permissions window that pops up.
-
-1. In the `Environment Type` page, for `Predefined configuration` select `Tomcat`. For `Environment type` select `Load balancing, auto scaling`. Click `Next`. ![](002.png "Environment Type page")
-
-1. In the `Application Version` page, for `Source` upload the ICE source that you can get from the [JBEI Github repository](https://github.com/JBEI/ice/releases/download/4.1.12-beta/ice-4.1.12-beta.war) then click `Next`.
-
-1. In the `Environment Information` page, ensure that the environment URL (one of the URLs at which your application will appear) is available, then click `Next`.
-
-1. In the `Additional Resources` page, check the `Create an RDS DB Instance with this environment` box then click `Next`.
-
-1. In the `Configuration Details` page, enter your email address if you want to be notified when the server is started, stopped, or goes offline. Click `Next`.
-
-1. Click `Next` on the `Environment Tags` page.
-
-1. In the `RDS Configuration` page, set `DB engine` to `postgres`. For the username, enter "tomcat", and then choose a secure password. Click `Next`.
+1. On the `RDS Configuration` page, set `DB engine` to `postgres`. For the username, enter "tomcat", and then choose a secure password. Click `Next`.
     - Note that you may need the username and password to recover your registry's database in case of a catastrophic failure.
-    - You should keep the default `Retention Setting` but note: 
-    > Terminating your environment can permanently delete your Amazon RDS DB instance and all its data. By default, AWS Elastic Beanstalk saves a snapshot, which preserves your data but may incur backup storage charges
+![](002.png "RDS Configuration Page")
 
-1. Click `Launch` on the `Review` page. It will take about 20 minutes for the application to fully launch.
+1. Click `Launch` on the `Review` page. It will take 30 minutes to an hour for the application to fully launch. When it is done, you'll see a green checkmark on the page. ![](003.png "Successful Launch page")
+
+
 
 ## Configure the application
 Before you can use the application you need to upload your SSL certificate to AWS.
