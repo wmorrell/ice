@@ -1,4 +1,5 @@
 ---
+layout: default
 ---
 
 # Deploying ICE to AWS
