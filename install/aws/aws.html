@@ -1014,7 +1014,9 @@ body .markdown-body
     page-break-after: avoid;
   }
 }
-</style><title>index</title></head><body><article class="markdown-body"><h1 id="deploying-ice-to-aws"><a name="user-content-deploying-ice-to-aws" href="#deploying-ice-to-aws" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Deploying ICE to AWS</h1>
+</style><title>index</title></head><body><article class="markdown-body"><!-- Don't edit the HTML version of this document. Edit the Markdown version then convert it to HTML -->
+
+<h1 id="deploying-ice-to-aws"><a name="user-content-deploying-ice-to-aws" href="#deploying-ice-to-aws" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Deploying ICE to AWS</h1>
 <p>The process takes about an hour to complete. You&rsquo;ll need</p>
 <ul>
 <li>An <a href="https://aws.amazon.com/">Amazon Web Services (AWS) account</a></li>
@@ -1024,10 +1026,10 @@ body .markdown-body
 <h2 id="start-the-application"><a name="user-content-start-the-application" href="#start-the-application" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Start the application</h2>
 <ol>
 <li>
-<p>Log into your AWS account and go to the <a href="https://console.aws.amazon.com/elasticbeanstalk/home">Elastic Beanstalk site</a>. It is in the <code>Services</code> menu at the top of the page. <img alt="" src="001.png" title="Elastic Beanstalk link" /></p>
+<p>Log into your AWS account and go to the <a href="https://console.aws.amazon.com/elasticbeanstalk/home">Elastic Beanstalk site</a>. It is in the <code>Services</code> menu at the top of the page. <img alt="" src="01.png" title="Elastic Beanstalk link" /></p>
 </li>
 <li>
-<p>Click <code>Create New Application</code> <img alt="" src="002.png" title="Create New Application link" /></p>
+<p>Click <code>Create New Application</code> <img alt="" src="/home/oge/code/ice/install/aws/001.png" title="Create New Application link" /></p>
 </li>
 <li>
 <p>Select an <code>Application Name</code>, something like &ldquo;jbei-registry&rdquo;. Click <code>Next</code>.</p>
@@ -1036,7 +1038,7 @@ body .markdown-body
 <p>Click <code>Create web server</code> and click <code>Next</code> on the Permissions window that pops up.</p>
 </li>
 <li>
-<p>In the <code>Environment Type</code> page, for <code>Predefined configuration</code> select <code>Tomcat</code>. For <code>Environment type</code> select <code>Load balancing, auto scaling</code>. Click <code>Next</code>. <img alt="" src="003.png" title="Environment Type page" /></p>
+<p>In the <code>Environment Type</code> page, for <code>Predefined configuration</code> select <code>Tomcat</code>. For <code>Environment type</code> select <code>Load balancing, auto scaling</code>. Click <code>Next</code>. <img alt="" src="/home/oge/code/ice/install/aws/002.png" title="Environment Type page" /></p>
 </li>
 <li>
 <p>In the <code>Application Version</code> page, for <code>Source</code> upload the ICE source that you can get from the <a href="https://github.com/JBEI/ice/releases/download/4.1.12-beta/ice-4.1.12-beta.war">JBEI Github repository</a> then click <code>Next</code>.</p>
@@ -1071,50 +1073,50 @@ body .markdown-body
 <p>Before you can use the application you need to upload your SSL certificate to AWS.</p>
 <ol>
 <li>
-<p>Go to the <code>EC2</code> site via the <code>Services</code> menu at the top of the page. <img alt="" src="005.png" title="EC2 link" /></p>
+<p>Go to the <code>EC2</code> site via the <code>Services</code> menu at the top of the page. <img alt="" src="/home/oge/code/ice/install/aws/005.png" title="EC2 link" /></p>
 </li>
 <li>
-<p>Click <code>Load Balancers</code> in the left-hand menu. <img alt="" src="006.png" title="Load Balancers link" /></p>
+<p>Click <code>Load Balancers</code> in the left-hand menu. <img alt="" src="/home/oge/code/ice/install/aws/006.png" title="Load Balancers link" /></p>
 </li>
 <li>
-<p>Select your load balancer from the table and then click the <code>Listeners</code> tab in the pane that appears at the bottom of the page and then click the <code>Edit</code> button. <img alt="" src="007.png" title="Listeners pane" /></p>
+<p>Select your load balancer from the table and then click the <code>Listeners</code> tab in the pane that appears at the bottom of the page and then click the <code>Edit</code> button. <img alt="" src="/home/oge/code/ice/install/aws/007.png" title="Listeners pane" /></p>
 </li>
 <li>
 <p>In the <code>Edit listeners</code> modal window click <code>Add</code>. </p>
 <ol>
-<li>In the new row that appears, under <code>Load Balancer Protocol</code>, choose <code>HTTPS (Secure HTTP)</code>. Change the <code>Load Balancer Port</code> to 8443. <img alt="" src="008.png" title="Edit listeners modal" /></li>
+<li>In the new row that appears, under <code>Load Balancer Protocol</code>, choose <code>HTTPS (Secure HTTP)</code>. Change the <code>Load Balancer Port</code> to 8443. <img alt="" src="/home/oge/code/ice/install/aws/008.png" title="Edit listeners modal" /></li>
 <li>Under <code>SSL Certificate</code> click <code>Change</code>. A <code>Select Certificate</code> modal window will pop up. For <code>Certificate Type</code> select <code>Upload a new SSL Certificate</code>.<ol>
 <li>If you&rsquo;re using an SSL certificate that you bought, enter &ldquo;server&rdquo; for the certificate name. Otherwise enter &ldquo;dummy&rdquo;. We&rsquo;ll assume that you&rsquo;re using a dummy certificate from here on out, but the instructions for setting up a real certificate are mostly the same.</li>
 <li>Paste your private key and public key certificate into the corresponding textboxes. Here is a <a href="https://github.com/JBEI/ice/wiki/Dummy-SSL-private-key">dummy private key</a> and a <a href="https://github.com/JBEI/ice/wiki/Dummy-SSL-Public-Key-Certificate">dummy public key certificate</a>.</li>
 <li>If you have an optional certificate chain, enter it as well.</li>
-<li>Click <code>Save</code>. <img alt="" src="010.png" title="Select Certificate modal" /></li>
+<li>Click <code>Save</code>. <img alt="" src="/home/oge/code/ice/install/aws/010.png" title="Select Certificate modal" /></li>
 </ol>
 </li>
-<li>Click <code>Save</code> again at the <code>Edit listeners</code> modal window, and when you see the success message, click <code>Close</code>. <img alt="" src="011.png" title="Create new listeners success" /></li>
+<li>Click <code>Save</code> again at the <code>Edit listeners</code> modal window, and when you see the success message, click <code>Close</code>. <img alt="" src="/home/oge/code/ice/install/aws/011.png" title="Create new listeners success" /></li>
 </ol>
 </li>
 <li>
-<p>Now we need to tell the application to use the SSL certificate that we just uploaded. Go back to the <code>Elastic Beanstalk</code> site (Services &gt; Elastic Beanstalk) and click on <code>Configuration</code> in the left-hand menu. <img alt="" src="013.png" title="Configuration link" /></p>
+<p>Now we need to tell the application to use the SSL certificate that we just uploaded. Go back to the <code>Elastic Beanstalk</code> site (Services &gt; Elastic Beanstalk) and click on <code>Configuration</code> in the left-hand menu. <img alt="" src="/home/oge/code/ice/install/aws/013.png" title="Configuration link" /></p>
 </li>
 <li>
-<p>Scroll down to the <code>Network Tier</code> section and click on the gear icon of the <code>Load Balancing</code> card. <img alt="" src="014.png" title="Load Balancing card" /></p>
+<p>Scroll down to the <code>Network Tier</code> section and click on the gear icon of the <code>Load Balancing</code> card. <img alt="" src="/home/oge/code/ice/install/aws/014.png" title="Load Balancing card" /></p>
 </li>
 <li>
-<p>Change <code>Secure listener port</code> to 8443 and the <code>SSL Certificate ID</code> to the name of the certificate you uploaded. Click <code>Save</code>. <img alt="" src="015.png" title="Load Balancer page" /></p>
+<p>Change <code>Secure listener port</code> to 8443 and the <code>SSL Certificate ID</code> to the name of the certificate you uploaded. Click <code>Save</code>. <img alt="" src="/home/oge/code/ice/install/aws/015.png" title="Load Balancer page" /></p>
 </li>
 <li>
 <p>Once Elastic Beanstalk is done updating the environment, we&rsquo;re ready to use the application.</p>
 </li>
 <li>
-<p>Click the link next to the name of your application and environment. It will look like &ldquo;jbeiregistry-env.elasticbeanstalk.com&rdquo;. <img alt="" src="016.png" title="application link" /></p>
+<p>Click the link next to the name of your application and environment. It will look like &ldquo;jbeiregistry-env.elasticbeanstalk.com&rdquo;. <img alt="" src="/home/oge/code/ice/install/aws/016.png" title="application link" /></p>
 </li>
 <li>
-<p>Once you ignore the security warning (since you&rsquo;re using a dummy certificate), you should see the ICE login page. <img alt="" src="017.png" title="ICE login page" /></p>
+<p>Once you ignore the security warning (since you&rsquo;re using a dummy certificate), you should see the ICE login page. <img alt="" src="/home/oge/code/ice/install/aws/017.png" title="ICE login page" /></p>
 </li>
 <li>
 <p>Enter the default username, &ldquo;Administrator&rdquo;, and password, &ldquo;Administrator&rdquo;. Change the password once you login since anyone on the Internet can now access your ICE registry.</p>
 </li>
 <li>
-<p>And you&rsquo;re done. <img alt="" src="018.png" title="ICE first page" /></p>
+<p>And you&rsquo;re done. <img alt="" src="/home/oge/code/ice/install/aws/018.png" title="ICE first page" /></p>
 </li>
 </ol></article></body></html>
