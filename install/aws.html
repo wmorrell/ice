@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Deploying ICE to AWS &mdash; ICE 4.1.13 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.1.13',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="ICE 4.1.13 documentation" href="../index.html" />
+    <link rel="prev" title="ICE Quick Start Guide" href="local.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="local.html" title="ICE Quick Start Guide"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ICE 4.1.13 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="deploying-ice-to-aws">
+<h1>Deploying ICE to AWS<a class="headerlink" href="#deploying-ice-to-aws" title="Permalink to this headline">¶</a></h1>
+<p>The process takes about an hour to complete. You&#8217;ll need</p>
+<ul class="simple">
+<li>An <a class="reference external" href="https://aws.amazon.com/">Amazon Web Services (AWS) account</a></li>
+<li>An <a class="reference external" href="https://www.namecheap.com/security/ssl-certificates/comodo.aspx">SSL
+certificate</a></li>
+</ul>
+<p>We&#8217;ve included a dummy SSL certificate that you can use while testing
+out the intallation process. Note that using the dummy certificate will
+allow anyone in the world to view all your ICE repository data, in which
+case you might as well use the <a class="reference external" href="https://public-registry.jbei.org/login">public ICE
+registry</a>.</p>
+<div class="section" id="start-the-application">
+<h2>Start the application<a class="headerlink" href="#start-the-application" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Start a new ICE application by clicking <a class="reference external" href="https://console.aws.amazon.com/elasticbeanstalk/?region=us-east-1#/newApplication?applicationName=jbei-ice&amp;solutionStackName=Tomcat&amp;sourceBundleUrl=https://s3.amazonaws.com/public-6612266/ice-4.1.13.war&amp;environmentType=LoadBalancing&amp;tierName=WebServer&amp;instanceType=t1.micro&amp;withVpc=false&amp;withRds=true&amp;rdsDBEngine=postgres&amp;rdsDBAllocatedStorage=5&amp;rdsDBInstanceClass=db.t1.micro&amp;rdsMultiAZDatabase=true&amp;rdsDBDeletionPolicy=Snapshot">this
+link</a>.
+This will create the application in Amazon&#8217;s Eastern U.S. servers
+which are accessible worldwide. If you need your ICE instance to run
+in a particular geographic location, please let us know here
+<a class="reference external" href="https://github.com/JBEI/ice/issues">here</a>.</li>
+<li>Enter a unique name for your application—something like
+&#8220;[institution-name]-ice&#8221;—and then click <strong>Review and Launch</strong>.
+<img alt="image0" src="../_images/001.png" /></li>
+<li>On the <strong>RDS Configuration</strong> page, set <strong>DB engine</strong> to <strong>postgres</strong>.
+For the username, enter &#8220;tomcat&#8221;, and then choose a secure password.
+Click <strong>Next</strong>.<ul>
+<li>Note that you may need the username and password to recover your
+registry&#8217;s database in case of a catastrophic failure. <img alt="image1" src="../_images/002.png" /></li>
+</ul>
+</li>
+<li>Click <strong>Launch</strong> on the <strong>Review</strong> page. It will take 30 minutes to
+an hour for the application to fully launch. When it is done, you&#8217;ll
+see a green checkmark on the page. <img alt="image2" src="../_images/003.png" /></li>
+</ol>
+</div>
+<div class="section" id="configure-the-application">
+<h2>Configure the application<a class="headerlink" href="#configure-the-application" title="Permalink to this headline">¶</a></h2>
+<p>Before you can use the application you need to upload your SSL
+certificate to AWS.</p>
+<ol class="arabic simple">
+<li>Go to the <strong>EC2</strong> site via the <strong>Services</strong> menu at the top of the
+page. <img alt="image3" src="../_images/005.png" /></li>
+<li>Click <strong>Load Balancers</strong> in the left-hand menu. <img alt="image4" src="../_images/006.png" /></li>
+<li>Select your load balancer from the table and then click the
+<strong>Listeners</strong> tab in the pane that appears at the bottom of the page
+and then click the <strong>Edit</strong> button. <img alt="image5" src="../_images/007.png" /></li>
+<li>In the <strong>Edit listeners</strong> modal window click <strong>Add</strong>.<ol class="arabic">
+<li>In the new row that appears, under <strong>Load Balancer Protocol</strong>, ch
+oose <strong>HTTPS (Secure HTTP)</strong>. Change the <strong>Load Balancer Port</strong>
+to 8443. <img alt="image6" src="../_images/008.png" /></li>
+<li>Under <strong>SSL Certificate</strong> click <strong>Change</strong>. A <strong>Select
+Certificate</strong> modal window will pop up. For <strong>Certificate Type</strong>
+select <strong>Upload a new SSL Certificate</strong>.<ol class="arabic">
+<li>If you&#8217;re using an SSL certificate that you bought, enter
+&#8220;server&#8221; for the certificate name. Otherwise enter &#8220;dummy&#8221;.
+We&#8217;ll assume that you&#8217;re using a dummy certificate from here
+on out, but the instructions for setting up a real certificate
+are mostly the same.</li>
+<li>Paste your private key and public key certificate into the
+corresponding textboxes. Here is a <a class="reference external" href="https://github.com/JBEI/ice/wiki/Dummy-SSL-private-key">dummy private
+key</a>
+and a <a class="reference external" href="https://github.com/JBEI/ice/wiki/Dummy-SSL-Public-Key-Certificate">dummy public key
+certificate</a>.</li>
+<li>If you have an optional certificate chain, enter it as well.</li>
+<li>Click <strong>Save</strong>. <img alt="image7" src="../_images/010.png" /></li>
+</ol>
+</li>
+<li>Click <strong>Save</strong> again at the <strong>Edit listeners</strong> modal window, and
+when you see the success message, click <strong>Close</strong>. <img alt="image8" src="../_images/011.png" /></li>
+</ol>
+</li>
+<li>Now we need to tell the application to use the SSL certificate that
+we just uploaded. Go back to the <strong>Elastic Beanstalk</strong> site
+(Services &gt; Elastic Beanstalk) and click on <strong>Configuration</strong> in the
+left-hand menu. <img alt="image9" src="../_images/013.png" /></li>
+<li>Scroll down to the <strong>Network Tier</strong> section and click on the gear
+icon of the <strong>Load Balancing</strong> card. <img alt="image10" src="../_images/014.png" /></li>
+<li>Change <strong>Secure listener port</strong> to 8443 and the <strong>SSL Certificate
+ID</strong> to the name of the certificate you uploaded. Click <strong>Save</strong>.
+<img alt="image11" src="../_images/015.png" /></li>
+<li>Once Elastic Beanstalk is done updating the environment, we&#8217;re ready
+to use the application.</li>
+<li>Click the link next to the name of your application and environment.
+It will look like &#8220;jbeiregistry-env.elasticbeanstalk.com&#8221;. <img alt="image12" src="../_images/016.png" /></li>
+<li>Once you ignore the security warning (since you&#8217;re using a dummy
+certificate), you should see the ICE login page. <img alt="image13" src="../_images/017.png" /></li>
+<li>Enter the default username, &#8220;Administrator&#8221;, and password,
+&#8220;Administrator&#8221;. Change the password once you login since anyone on
+the Internet can now access your ICE registry.</li>
+<li>And you&#8217;re done. <img alt="image14" src="../_images/018.png" /></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Deploying ICE to AWS</a><ul>
+<li><a class="reference internal" href="#start-the-application">Start the application</a></li>
+<li><a class="reference internal" href="#configure-the-application">Configure the application</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="local.html"
+                        title="previous chapter">ICE Quick Start Guide</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/install/aws.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, JBEI.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+      |
+      <a href="../_sources/install/aws.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>

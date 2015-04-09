@@ -1,0 +1,10 @@
+Inventory of Composable ELements (ICE) Documentation
+====================================================
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+   install/local
+   install/aws

@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ICE Quick Start Guide &mdash; ICE 4.1.13 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.1.13',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="ICE 4.1.13 documentation" href="../index.html" />
+    <link rel="next" title="Deploying ICE to AWS" href="aws.html" />
+    <link rel="prev" title="Inventory of Composable ELements (ICE) Documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="aws.html" title="Deploying ICE to AWS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Inventory of Composable ELements (ICE) Documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ICE 4.1.13 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ice-quick-start-guide">
+<h1>ICE Quick Start Guide<a class="headerlink" href="#ice-quick-start-guide" title="Permalink to this headline">¶</a></h1>
+<p>This guide is intended to help you quickly set up an ICE installation
+for evaluation, private use or server installation. A more detailed
+manual is being worked on. Direct any questions to the <a class="reference external" href="https://groups.google.com/forum/#!forum/gd-ice">ICE Google
+Groups page</a>. The
+project page can be <a class="reference external" href="https://github.com/JBEI/ice">found on github.</a></p>
+<div class="section" id="installation-requirements">
+<h2>Installation Requirements<a class="headerlink" href="#installation-requirements" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">Running ICE as a web application requires deployment in a J2EE servlet</div>
+</div>
+<p>container such as Apache Tomcat and depends on JRE (or JDK) 7.
+|  To use BLAST to search sequences, <a class="reference external" href="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/">obtain the latest BLAST+
+executables.</a>
+You can either install it on your system or extract it to a folder.
+|  ICE is configured by default to use <a class="reference external" href="http://hsqldb.org/">HSQLDB</a>
+for data storage. In a production environment, it is highly recommended
+that a standalone database be used.
+<a class="reference external" href="http://hibernate.org/orm/">Hibernate</a> is used for Object/Relational
+mapping and therefore ICE can be configured and used with any of the
+Hibernate supported databases.
+<a class="reference external" href="http://www.postgresql.org/">PostgreSQL</a> has been tested more
+extensively with ICE.</p>
+</div>
+<div class="section" id="installing-from-the-war-file">
+<h2>Installing from the WAR file<a class="headerlink" href="#installing-from-the-war-file" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">A pre-compiled WAR file is made available from our <a href="#id1"><span class="problematic" id="id2">`</span></a>continuous build</div>
+</div>
+<p>system &lt;<a class="reference external" href="http://registry-test.jbei.org:8111/">http://registry-test.jbei.org:8111/</a>&gt;`__. Click &#8220;Log in as guest&#8221;
+and then select &#8220;Artifacts&#8221; under the Master branch to download the
+latest production ready version. The Dev branch may contain newer
+features in a beta state.</p>
+<ul>
+<li><p class="first">Extract the contents of the WAR file using any unzip utility.</p>
+</li>
+<li><div class="first line-block">
+<div class="line">Change the hibernate database connections in</div>
+</div>
+<p>$ICE_HOME/WEB-INF/classes/hibernate.cfg.xml (where $ICE_HOME is the
+directory where the WAR file was extracted). The following is an
+example configuration for a PostgreSQL database running on the local
+machine:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;property name=&quot;hibernate.connection.url&quot;&gt;jdbc:postgresql://localhost/regdb&lt;/property&gt;
+&lt;property name=&quot;hibernate.connection.driver_class&quot;&gt;org.postgresql.Driver&lt;/property&gt;
+&lt;property name=&quot;hibernate.connection.username&quot;&gt;userName&lt;/property&gt;
+&lt;roperty name=&quot;hibernate.connection.password&quot;&gt;Pa55WorD&lt;/property&gt;
+&lt;property name=&quot;hibernate.dialect&quot;&gt;org.hibernate.dialect.PostgreSQL9Dialect&lt;/property&gt;
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">Also change the value of the property which indicates the location</div>
+</div>
+<p>of the search index</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;property name=&quot;hibernate.search.default.indexBase&quot;&gt;data/index&lt;/property&gt;
+</pre></div>
+</div>
+</li>
+<li><p class="first">ICE uses logback for logging. The default location of the log file is
+/tmp/gd-ice.log. You can change this in
+$ICE_HOME/WEB-INF/classes/logback.xml</p>
+</li>
+<li><p class="first">You may change the logo (which appears on the login page and the page
+headers) by replacing $ICE_HOME/static/images/logo.png with your
+custom logo.</p>
+</li>
+<li><p class="first">You may change the application page title by opening
+$ICE_HOME/Gwt_ice.html in any text editor and replacing &#8220;JBEI
+Registry&#8221;.</p>
+</li>
+</ul>
+<p>Start up the application container and use your web browser to access
+ICE. There are some settings stored in the database that also need to be
+configured. The default administrator username and password is
+Administrator (for both). Be sure to change the password. The rest of
+the system settings are on the Admin section of the application. Please
+go through all the settings and make sure the values are correct. They
+can be changed at any time while the application is running.</p>
+</div>
+<div class="section" id="running-a-test-server">
+<h2>Running a test server<a class="headerlink" href="#running-a-test-server" title="Permalink to this headline">¶</a></h2>
+<p>ICE includes a jetty webserver, which can be used test out your compiled
+package without deploying it to tomcat. The jetty settings are defined
+in $ICE_HOME/jetty-debug.xml. You will need to generate a self-signed
+certificate as ICE uses HTTPS by default. To generate a self-signed
+certificate run:</p>
+<div class="highlight-python"><div class="highlight"><pre>keytool -genkey -alias tomcat -keyalg RSA -keystore ./.keystore
+</pre></div>
+</div>
+<p>Follow the prompts and enter the requested information. When prompted
+for a password, you may use changeit. If you opt for a different
+password, make sure to enter that is jetty-debug.xml. Copy the generated
+.keystore file to $ICE_HOME and start jetty by running:</p>
+<div class="highlight-python"><div class="highlight"><pre>mvn jetty:run -Dmaven.test.skip=true
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">Point your browser to <a class="reference external" href="https://localhost:8443">https://localhost:8443</a> to access the</div>
+</div>
+<p>application.
+|  To run a tomcat server, you may also use the generated keystore file.
+Update $TOMCAT_HOME/conf/server.xml to redirect port 8080 to port 8443
+using the following Connector directive:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;Connector executor=&quot;tomcatThreadPool&quot;
+                            port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;
+                            connectionTimeout=&quot;20000&quot;
+                            redirectPort=&quot;8443&quot; /&gt;
+                &lt;Connector port=&quot;8443&quot; protocol=&quot;HTTP/1.1&quot; SSLEnabled=&quot;true&quot;
+                           maxThreads=&quot;150&quot; scheme=&quot;https&quot; secure=&quot;true&quot; keystoreFile=&quot;./.keystore&quot;
+                           keystorePass=&quot;changeit&quot; clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; /&gt;
+</pre></div>
+</div>
+<p>In a production environment you will need to purchase an SSL
+certificate, since self-generated certificates result in browser
+warnings.</p>
+</div>
+<div class="section" id="upgrading-from-older-versions">
+<h2>Upgrading from older versions<a class="headerlink" href="#upgrading-from-older-versions" title="Permalink to this headline">¶</a></h2>
+<p>At this time, only upgrading from version 3.* to any of 3.* versions
+is supported. It is recommended that you perform a full database backup
+before attempting an upgrade. There are some changes to the database
+schemas so ensure that the &#8216;hbm2ddl.auto&#8217; property is set to &#8216;update&#8217;
+when first starting up the server after updating the webapp.</p>
+</div>
+<div class="section" id="administration">
+<h2>Administration<a class="headerlink" href="#administration" title="Permalink to this headline">¶</a></h2>
+<p>There are a few basic functions available from the the Administrator&#8217;s
+page located at <a class="reference external" href="https://yoursite/#page=admin">https://yoursite/#page=admin</a>. Any user with
+administrative privileges will see an admin link in the main menu. The
+admin section currently includes:</p>
+<ul class="simple">
+<li><strong>System settings</strong>: used for general site settings, email settings,
+and blast search settings.</li>
+<li><strong>Web of registries settings</strong>: allows you to include your site in
+the web of registries and partner with other ICE installations to
+access data that is made publicly available. We encourage all
+institutions to enable this feature.
+<strong>NOTE</strong>: Joining web of registries does not make your data visible
+to other institutions. Each record/entry in ICE has to be explicitly
+made public, before it is available.</li>
+<li><strong>Manage User settings</strong>: shows list of site members and basic
+information about them and allows user account creation.</li>
+<li><strong>Manage Groups</strong>: permits public group creation and management.</li>
+</ul>
+</div>
+<div class="section" id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>ICE is <a class="reference external" href="https://github.com/JBEI/ice">open source software</a>, and we
+gladly accept patches to our code. Just send us an email and/or a patch
+file. We also encourage bug filings and feature requests.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ICE Quick Start Guide</a><ul>
+<li><a class="reference internal" href="#installation-requirements">Installation Requirements</a></li>
+<li><a class="reference internal" href="#installing-from-the-war-file">Installing from the WAR file</a></li>
+<li><a class="reference internal" href="#running-a-test-server">Running a test server</a></li>
+<li><a class="reference internal" href="#upgrading-from-older-versions">Upgrading from older versions</a></li>
+<li><a class="reference internal" href="#administration">Administration</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Inventory of Composable ELements (ICE) Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="aws.html"
+                        title="next chapter">Deploying ICE to AWS</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/install/local.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, JBEI.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+      |
+      <a href="../_sources/install/local.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>
