@@ -1,153 +1,110 @@
-ICE Quick Start Guide
----------------------
+Deployment Guide
+================
 
-This guide is intended to help you quickly set up an ICE installation
-for evaluation, private use or server installation. A more detailed
-manual is being worked on. Direct any questions to the `ICE Google
-Groups page <https://groups.google.com/forum/#!forum/gd-ice>`__. The
-project page can be `found on github. <https://github.com/JBEI/ice>`__
+This guide will help you quickly set up an ICE installation
+for production use.
 
-Installation Requirements
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Amazon Web Services (AWS)
+-------------------------
+The easiest way is to use AWS Elastic Beanstalk. Although the setup time is similar to the time for a custom server install, you get additional benefits including automatic security updates, database backups, and automatic monitoring, graphing and notification of server events. The following page will show you how to get started with it.
 
-| Running ICE as a web application requires deployment in a J2EE servlet
-container such as Apache Tomcat and depends on JRE (or JDK) 7.
-|  To use BLAST to search sequences, `obtain the latest BLAST+
-executables. <ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/>`__
-You can either install it on your system or extract it to a folder.
-|  ICE is configured by default to use `HSQLDB <http://hsqldb.org/>`__
-for data storage. In a production environment, it is highly recommended
-that a standalone database be used.
-`Hibernate <http://hibernate.org/orm/>`__ is used for Object/Relational
-mapping and therefore ICE can be configured and used with any of the
-Hibernate supported databases.
-`PostgreSQL <http://www.postgresql.org/>`__ has been tested more
-extensively with ICE.
+:doc:`aws`
 
-Installing from the WAR file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Custom Server
+-------------
+Server setup takes a few steps
 
-| A pre-compiled WAR file is made available from our `continuous build
-system <http://registry-test.jbei.org:8111/>`__. Click "Log in as guest"
-and then select "Artifacts" under the Master branch to download the
-latest production ready version. The Dev branch may contain newer
-features in a beta state.
+* installing an SSL certificate
+* pointing Web server at the ICE war
+* Set up the database
+* Set some system properties
+* Restart the Web server
 
--  Extract the contents of the WAR file using any unzip utility.
--  | Change the hibernate database connections in
-   $ICE\_HOME/WEB-INF/classes/hibernate.cfg.xml (where $ICE\_HOME is the
-   directory where the WAR file was extracted). The following is an
-   example configuration for a PostgreSQL database running on the local
-   machine:
-
-   ::
-
-           <property name="hibernate.connection.url">jdbc:postgresql://localhost/regdb</property>
-           <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-           <property name="hibernate.connection.username">userName</property>
-           <roperty name="hibernate.connection.password">Pa55WorD</property>
-           <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
-
-   | Also change the value of the property which indicates the location
-   of the search index
-
-   ::
-
-       <property name="hibernate.search.default.indexBase">data/index</property>
-
--  ICE uses logback for logging. The default location of the log file is
-   /tmp/gd-ice.log. You can change this in
-   $ICE\_HOME/WEB-INF/classes/logback.xml
--  You may change the logo (which appears on the login page and the page
-   headers) by replacing $ICE\_HOME/static/images/logo.png with your
-   custom logo.
--  You may change the application page title by opening
-   $ICE\_HOME/Gwt\_ice.html in any text editor and replacing "JBEI
-   Registry".
-
-Start up the application container and use your web browser to access
-ICE. There are some settings stored in the database that also need to be
-configured. The default administrator username and password is
-Administrator (for both). Be sure to change the password. The rest of
-the system settings are on the Admin section of the application. Please
-go through all the settings and make sure the values are correct. They
-can be changed at any time while the application is running.
-
-Running a test server
-~~~~~~~~~~~~~~~~~~~~~
-
-ICE includes a jetty webserver, which can be used test out your compiled
-package without deploying it to tomcat. The jetty settings are defined
-in $ICE\_HOME/jetty-debug.xml. You will need to generate a self-signed
-certificate as ICE uses HTTPS by default. To generate a self-signed
-certificate run:
-
-::
-
-    keytool -genkey -alias tomcat -keyalg RSA -keystore ./.keystore
-
-Follow the prompts and enter the requested information. When prompted
-for a password, you may use changeit. If you opt for a different
-password, make sure to enter that is jetty-debug.xml. Copy the generated
-.keystore file to $ICE\_HOME and start jetty by running:
-
-::
-
-    mvn jetty:run -Dmaven.test.skip=true
-
-| Point your browser to https://localhost:8443 to access the
-application.
-|  To run a tomcat server, you may also use the generated keystore file.
-Update $TOMCAT\_HOME/conf/server.xml to redirect port 8080 to port 8443
-using the following Connector directive:
-
-::
-
-    <Connector executor="tomcatThreadPool"
-                                port="8080" protocol="HTTP/1.1"
-                                connectionTimeout="20000"
-                                redirectPort="8443" />
-                    <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
-                               maxThreads="150" scheme="https" secure="true" keystoreFile="./.keystore"
-                               keystorePass="changeit" clientAuth="false" sslProtocol="TLS" />
-
-In a production environment you will need to purchase an SSL
-certificate, since self-generated certificates result in browser
-warnings.
-
-Upgrading from older versions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-At this time, only upgrading from version 3.\* to any of 3.\* versions
-is supported. It is recommended that you perform a full database backup
-before attempting an upgrade. There are some changes to the database
-schemas so ensure that the 'hbm2ddl.auto' property is set to 'update'
-when first starting up the server after updating the webapp.
-
-Administration
-~~~~~~~~~~~~~~
-
-There are a few basic functions available from the the Administrator's
-page located at https://yoursite/#page=admin. Any user with
-administrative privileges will see an admin link in the main menu. The
-admin section currently includes:
-
--  **System settings**: used for general site settings, email settings,
-   and blast search settings.
--  **Web of registries settings**: allows you to include your site in
-   the web of registries and partner with other ICE installations to
-   access data that is made publicly available. We encourage all
-   institutions to enable this feature.
-   **NOTE**: Joining web of registries does not make your data visible
-   to other institutions. Each record/entry in ICE has to be explicitly
-   made public, before it is available.
--  **Manage User settings**: shows list of site members and basic
-   information about them and allows user account creation.
--  **Manage Groups**: permits public group creation and management.
-
-Contributing
+Requirements
 ~~~~~~~~~~~~
+You'll need the following
 
-ICE is `open source software <https://github.com/JBEI/ice>`__, and we
-gladly accept patches to our code. Just send us an email and/or a patch
-file. We also encourage bug filings and feature requests.
+* A Debian (or Debian-like) server
+* An SSL certificate. You can `purchase one here <https://www.namecheap.com/security/ssl-certificates/comodo.aspx>`__ or `follow these steps <http://stackoverflow.com/questions/10175812/how-to-create-a-self-signed-certificate-with-openssl>`__ to generate a self-signed certificate.
+
+Software Installation
+~~~~~~~~~~~~~~~~~~~~~
+Install the following software
+
+* `Apache Tomcat <http://tomcat.apache.org/download-70.cgi>`__
+* `BLAST+ <http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download>`__
+* `PostgreSQL <http://www.postgresql.org/download/>`__
+* `Java JDK 7 <http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html>`__
+* `Maven <https://maven.apache.org/download.cgi>`__
+
+using this command
+
+::
+
+  sudo apt-get install tomcat7 ncbi-blast+ default-jdk \
+    maven postgresql 
+
+WAR installation
+~~~~~~~~~~~~~~~~
+Download `the latest ICE war <https://github.com/JBEI/ice/releases>`__ from Github and make it the ROOT application on your tomcat installation. You may have to delete the existing ROOT application first.
+
+::
+
+  sudo wget https://github.com/JBEI/ice/releases/download/4.1.14/ice-4.1.14.war \
+    --output-file /var/lib/tomcat7/webapps/ROOT.war
+
+Database setup
+~~~~~~~~~~~~~~
+Create a new PostgreSQL database and create a database user that ICE can use to connect to the database.
+
+::
+
+  sudo -u postgres psql --command \
+    "CREATE DATABASE registry; CREATE USER 'tomcat7' WITH PASSWORD 'tomcat7';"
+
+
+Set System Properties
+~~~~~~~~~~~~~~~~~~~~~
+In order for ICE to connect to the database, you'll need to set some system properties that Tomcat will pass along when starting up. Create the file ``/usr/share/tomcat7/bin/setenv/sh`` and set the ``CATALINA_OPTS`` environment variable.
+
+::
+
+  sudo echo "export CATALINA_OPTS="$CATALINA_OPTS \
+    -DRDS_HOSTNAME=localhost \
+    -DRDS_PORT=5432 \
+    -DRDS_DB_NAME=registry \
+    -DRDS_username=tomcat7 \
+    -DRDS_PASSWORD=tomcat7" > /usr/share/tomcat7/bin/setenv/sh
+
+
+Install the SSL Certificate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Import your certificate into a Tomcat keystore wherevere you like. We'll use ``/etc``
+::
+
+  sudo keytool -import -trustcacerts -alias server \
+    -keystore /etc/tomcat7/.keystore -file <certificate> 
+
+Now edit ``/etc/tomcat7/server.xml`` to configure SSL using the keystore by adding the following fragment
+
+::
+  
+  <Connector
+       protocol="org.apache.coyote.http11.Http11Protocol"
+       port="8443" maxThreads="200"
+       scheme="https" secure="true" SSLEnabled="true"
+       keystoreFile=".keystore" keystorePass="changeit"
+       clientAuth="false" sslProtocol="TLS"/>
+
+
+View the Application
+~~~~~~~~~~~~~~~~~~~~
+
+Restart Tomcat
+
+::
+
+  sudo service restart tomcat7
+
+And you should now be able to see ICE running at https://localhost:8443.
