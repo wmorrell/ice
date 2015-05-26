@@ -92,35 +92,30 @@ for production use.</p>
 </ul>
 <p>using this command</p>
 <div class="highlight-python"><div class="highlight"><pre>sudo apt-get install tomcat7 ncbi-blast+ default-jdk \
-  maven postgresql
+  postgresql
 </pre></div>
 </div>
 </div>
 <div class="section" id="war-installation">
 <h3>WAR installation<a class="headerlink" href="#war-installation" title="Permalink to this headline">¶</a></h3>
 <p>Download <a class="reference external" href="https://github.com/JBEI/ice/releases">the latest ICE war</a> from Github and make it the ROOT application on your tomcat installation. You may have to delete the existing ROOT application first.</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo wget https://github.com/JBEI/ice/releases/download/4.1.14/ice-4.1.14.war \
-  --output-file /var/lib/tomcat7/webapps/ROOT.war
+<div class="highlight-python"><div class="highlight"><pre>sudo mv /var/lib/tomcat7/webapps/ROOT /var/lib/tomcat7/webapps/old-ROOT
+sudo wget https://github.com/JBEI/ice/releases/download/4.1.18/ice-4.1.18.war \
+  --output-document /var/lib/tomcat7/webapps/ROOT.war
 </pre></div>
 </div>
 </div>
 <div class="section" id="database-setup">
 <h3>Database setup<a class="headerlink" href="#database-setup" title="Permalink to this headline">¶</a></h3>
 <p>Create a new PostgreSQL database and create a database user that ICE can use to connect to the database.</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo -u postgres psql --command \
-  &quot;CREATE DATABASE registry; CREATE USER &#39;tomcat7&#39; WITH PASSWORD &#39;tomcat7&#39;;&quot;
+<div class="highlight-python"><div class="highlight"><pre>sudo -u postgres psql --command &quot;CREATE DATABASE registry;&quot;
+sudo -u postgres psql --command &quot;CREATE USER tomcat7 WITH PASSWORD &#39;&lt;password&gt;&#39;;&quot;
 </pre></div>
 </div>
 </div>
-<div class="section" id="set-system-properties">
-<h3>Set System Properties<a class="headerlink" href="#set-system-properties" title="Permalink to this headline">¶</a></h3>
-<p>In order for ICE to connect to the database, you&#8217;ll need to set some system properties that Tomcat will pass along when starting up. Create the file <code class="docutils literal"><span class="pre">/usr/share/tomcat7/bin/setenv/sh</span></code> and set the <code class="docutils literal"><span class="pre">CATALINA_OPTS</span></code> environment variable.</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo echo &quot;export CATALINA_OPTS=&quot;$CATALINA_OPTS \
-  -DRDS_HOSTNAME=localhost \
-  -DRDS_PORT=5432 \
-  -DRDS_DB_NAME=registry \
-  -DRDS_username=tomcat7 \
-  -DRDS_PASSWORD=tomcat7&quot; &gt; /usr/share/tomcat7/bin/setenv/sh
+<div class="section" id="make-the-ice-temporary-directories-readable-by-tomcat">
+<h3>Make the ICE temporary directories readable by Tomcat<a class="headerlink" href="#make-the-ice-temporary-directories-readable-by-tomcat" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre>sudo chown tomcat7:tomcat7 /var/lib/tomcat7/
 </pre></div>
 </div>
 </div>
@@ -128,7 +123,7 @@ for production use.</p>
 <h3>Install the SSL Certificate<a class="headerlink" href="#install-the-ssl-certificate" title="Permalink to this headline">¶</a></h3>
 <p>Import your certificate into a Tomcat keystore wherevere you like. We&#8217;ll use <code class="docutils literal"><span class="pre">/etc</span></code></p>
 <div class="highlight-python"><div class="highlight"><pre>sudo keytool -import -trustcacerts -alias server \
-  -keystore /etc/tomcat7/.keystore -file &lt;certificate&gt;
+  -keystore /etc/tomcat7/.keystore -file &lt;certificate-file-name&gt;
 </pre></div>
 </div>
 <p>Now edit <code class="docutils literal"><span class="pre">/etc/tomcat7/server.xml</span></code> to configure SSL using the keystore by adding the following fragment</p>
@@ -136,7 +131,7 @@ for production use.</p>
      protocol=&quot;org.apache.coyote.http11.Http11Protocol&quot;
      port=&quot;8443&quot; maxThreads=&quot;200&quot;
      scheme=&quot;https&quot; secure=&quot;true&quot; SSLEnabled=&quot;true&quot;
-     keystoreFile=&quot;.keystore&quot; keystorePass=&quot;changeit&quot;
+     keystoreFile=&quot;/etc/tomcat7/.keystore&quot; keystorePass=&quot;&lt;password&gt;&quot;
      clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot;/&gt;
 </pre></div>
 </div>
@@ -144,7 +139,7 @@ for production use.</p>
 <div class="section" id="view-the-application">
 <h3>View the Application<a class="headerlink" href="#view-the-application" title="Permalink to this headline">¶</a></h3>
 <p>Restart Tomcat</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo service restart tomcat7
+<div class="highlight-python"><div class="highlight"><pre>sudo service tomcat7 restart
 </pre></div>
 </div>
 <p>And you should now be able to see ICE running at <a class="reference external" href="https://localhost:8443">https://localhost:8443</a>.</p>
@@ -167,7 +162,7 @@ for production use.</p>
 <li><a class="reference internal" href="#software-installation">Software Installation</a></li>
 <li><a class="reference internal" href="#war-installation">WAR installation</a></li>
 <li><a class="reference internal" href="#database-setup">Database setup</a></li>
-<li><a class="reference internal" href="#set-system-properties">Set System Properties</a></li>
+<li><a class="reference internal" href="#make-the-ice-temporary-directories-readable-by-tomcat">Make the ICE temporary directories readable by Tomcat</a></li>
 <li><a class="reference internal" href="#install-the-ssl-certificate">Install the SSL Certificate</a></li>
 <li><a class="reference internal" href="#view-the-application">View the Application</a></li>
 </ul>

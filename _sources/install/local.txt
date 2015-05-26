@@ -42,7 +42,7 @@ using this command
 ::
 
   sudo apt-get install tomcat7 ncbi-blast+ default-jdk \
-    maven postgresql 
+    postgresql
 
 WAR installation
 ~~~~~~~~~~~~~~~~
@@ -50,8 +50,9 @@ Download `the latest ICE war <https://github.com/JBEI/ice/releases>`__ from Gith
 
 ::
 
-  sudo wget https://github.com/JBEI/ice/releases/download/4.1.14/ice-4.1.14.war \
-    --output-file /var/lib/tomcat7/webapps/ROOT.war
+  sudo mv /var/lib/tomcat7/webapps/ROOT /var/lib/tomcat7/webapps/old-ROOT
+  sudo wget https://github.com/JBEI/ice/releases/download/4.1.18/ice-4.1.18.war \
+    --output-document /var/lib/tomcat7/webapps/ROOT.war
 
 Database setup
 ~~~~~~~~~~~~~~
@@ -59,23 +60,15 @@ Create a new PostgreSQL database and create a database user that ICE can use to 
 
 ::
 
-  sudo -u postgres psql --command \
-    "CREATE DATABASE registry; CREATE USER 'tomcat7' WITH PASSWORD 'tomcat7';"
+  sudo -u postgres psql --command "CREATE DATABASE registry;"
+  sudo -u postgres psql --command "CREATE USER tomcat7 WITH PASSWORD '<password>';"
 
-
-Set System Properties
-~~~~~~~~~~~~~~~~~~~~~
-In order for ICE to connect to the database, you'll need to set some system properties that Tomcat will pass along when starting up. Create the file ``/usr/share/tomcat7/bin/setenv/sh`` and set the ``CATALINA_OPTS`` environment variable.
+Make the ICE temporary directories readable by Tomcat
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-  sudo echo "export CATALINA_OPTS="$CATALINA_OPTS \
-    -DRDS_HOSTNAME=localhost \
-    -DRDS_PORT=5432 \
-    -DRDS_DB_NAME=registry \
-    -DRDS_username=tomcat7 \
-    -DRDS_PASSWORD=tomcat7" > /usr/share/tomcat7/bin/setenv/sh
-
+    sudo chown tomcat7:tomcat7 /var/lib/tomcat7/
 
 Install the SSL Certificate
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,17 +77,17 @@ Import your certificate into a Tomcat keystore wherevere you like. We'll use ``/
 ::
 
   sudo keytool -import -trustcacerts -alias server \
-    -keystore /etc/tomcat7/.keystore -file <certificate> 
+    -keystore /etc/tomcat7/.keystore -file <certificate-file-name>
 
 Now edit ``/etc/tomcat7/server.xml`` to configure SSL using the keystore by adding the following fragment
 
 ::
-  
+
   <Connector
        protocol="org.apache.coyote.http11.Http11Protocol"
        port="8443" maxThreads="200"
        scheme="https" secure="true" SSLEnabled="true"
-       keystoreFile=".keystore" keystorePass="changeit"
+       keystoreFile="/etc/tomcat7/.keystore" keystorePass="<password>"
        clientAuth="false" sslProtocol="TLS"/>
 
 
@@ -105,6 +98,6 @@ Restart Tomcat
 
 ::
 
-  sudo service restart tomcat7
+  sudo service tomcat7 restart
 
 And you should now be able to see ICE running at https://localhost:8443.
