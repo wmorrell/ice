@@ -176,7 +176,7 @@ public class ConfigurationController {
         final String LOGO_NAME = "logo.png";
         final String LOGIN_MESSAGE_FILENAME = "institution.html";
         final String FOOTER_FILENAME = "footer.html";
-
+        System.out.println(Paths.get(dataDirectory, UI_CONFIG_DIR, LOGO_NAME).toAbsolutePath().toString());
         settings.setHasLogo(Files.exists(Paths.get(dataDirectory, UI_CONFIG_DIR, LOGO_NAME)));
         settings.setHasLoginMessage(Files.exists(Paths.get(dataDirectory, UI_CONFIG_DIR, LOGIN_MESSAGE_FILENAME)));
         settings.setHasFooter(Files.exists(Paths.get(dataDirectory, UI_CONFIG_DIR, FOOTER_FILENAME)));
