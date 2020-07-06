@@ -25,9 +25,10 @@ FROM tomcat:9
 RUN apt-get clean \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -q --no-install-recommends \
-        ncbi-blast+=2.6.0-1 \
+        ncbi-blast+ \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /usr/local/tomcat/webapps/*
 
+COPY docker/setenv.sh /usr/local/tomcat/bin/setenv.sh
 COPY --from=maven /tmp/target/ice-*.war /usr/local/tomcat/webapps/ROOT.war

@@ -13,7 +13,6 @@ To build ICE, just run from the project root:
 docker build -t jbei/ice:latest -f docker/Dockerfile .
 ```
 
-
 ### Launching ICE
 
 The `docker-compose.yml` file here will launch ICE on port 9999 on the host
@@ -25,3 +24,11 @@ directory using the command:
 ```bash
 docker-compose up
 ```
+
+### Configuring Database Connection
+
+The Docker image for ICE will default its database connection to the Postgres
+database launched with Docker Compose. To connect to a different database, set
+the environment variables `ICE_DB_URL`, `ICE_DB_USER`, and `ICE_DB_PASS` on the
+ICE container. To change any other database connection parameters, replace the
+`hibernate.cfg.xml` file in a derived image.
